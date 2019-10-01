@@ -5,17 +5,17 @@
 nano ~/.bashrc
 ```
 
-Add line ``` alias dc="docker-compose"``` at the end and then apply the changes
+Add the following line ``` alias dc="docker-compose"``` at the end of the file and then apply the changes
 
 ```bash
 source ~/.bashrc
 ```
 
-Run the command (where the docker-compose.yaml file is located)
+Run the command (in the directory where docker-compose.yaml file is stored)
 ```bash
 dc up
 ```
 
 #### Use phpcs in PHPStorm
 
-Use the file ```scripts/php.sh``` as path in ```File -> Settings -> Languages & Frameworks -> Quality Tools -> Code Sniffer -> ... -> PHP Code Sniffer path```
+Use the file ```scripts/phpcs.sh``` as path in ```File -> Settings -> Languages & Frameworks -> Quality Tools -> Code Sniffer -> ... -> PHP Code Sniffer path```
