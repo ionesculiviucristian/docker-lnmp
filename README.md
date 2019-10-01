@@ -1,5 +1,12 @@
 # Docker setup for nginx, mysql and php
+#### Requirements (if Docker is not installed and you are using the Ubuntu distro)
+
+Install docker using the guide located [here](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
+
+Install docker-compose using the guide located [here](https://docs.docker.com/compose/install/).
+
 #### Usage
+
 (Optional) Add an alias for docker-compose
 ```bash
 nano ~/.bashrc
