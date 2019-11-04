@@ -12,10 +12,20 @@ Install docker-compose using the guide located [here](https://docs.docker.com/co
 nano ~/.bashrc
 ```
 
-Add the following line ``` alias dc="docker-compose"``` at the end of the file and then apply the changes
+Add the following line ```alias dc="docker-compose"``` at the end of the file and then apply the changes
 
 ```bash
 source ~/.bashrc
+```
+
+Customize the ```.env``` file after copying it
+```bash
+cp .env.exemple .env
+```
+
+Make sure you have the ```PROJECT_PUBLIC_PATH``` folder created
+```bash
+mkdir -p ~/projects/my-project/public
 ```
 
 Run the command (in the directory where docker-compose.yaml file is stored)

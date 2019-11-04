@@ -2,11 +2,12 @@ version: "3.7"
 services:
   # nginx
   srv_nginx:
+    container_name: local_srv_nginx
     build:
       context: configs
       dockerfile: nginx/Dockerfile
     ports:
-      - 80:80
+      - 8080:80
     links:
       - srv_php
     environment:
@@ -15,17 +16,19 @@ services:
       - ${PROJECT_PUBLIC_PATH}:/app/public
   # MySQL
   srv_mysql:
+    container_name: local_srv_mysql
     build:
       context: configs
       dockerfile: mysql/Dockerfile
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-      - 3306:3306
+      - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
   # PHP-FPM
   srv_php:
+    container_name: local_srv_php
     build:
       context: configs
       dockerfile: php/Dockerfile
