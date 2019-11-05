@@ -29,6 +29,11 @@ services:
   # PHP-FPM
   srv_php:
     container_name: local_srv_php
+    environment:
+      UPLOAD_MAX_FILESIZE: 100M
+      POST_MAX_SIZE: 1000M
+      MEMORY_LIMIT: 2048M
+      DATE_TIMEZONE: Europe/Bucharest
     build:
       context: configs
       dockerfile: php/Dockerfile

@@ -7,23 +7,33 @@ RUN apk --update add \
   && apk del libxml2-dev zlib-dev
 
 ARG PHP_INI_PATH=/usr/local/etc/php/php.ini
-ARG PHP_FPM_INI_PATH=/usr/local/etc/php-fpm.d/www.conf
+ARG PHP_FPM_POOL_PATH=/usr/local/etc/php-fpm.d/www.conf
+# Fix composer installation for exceded memory limit
+ENV MEMORY_LIMIT=100M
 
 RUN \
     adduser -D -u 1000 php && \
     mv /usr/local/etc/php/php.ini-production $PHP_INI_PATH && \
     sed -i \
-      -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" \
-      -e "s/variables_order = \"GPCS\"/variables_order = \"EGPCS\"/g" \
-      -e "s/;daemonize\s*=\s*yes/daemonize = no/g" \
-      -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" \
+      -e "s/upload_max_filesize = .*/upload_max_filesize = \${UPLOAD_MAX_FILESIZE}/g" \
+      -e "s/post_max_size = .*/post_max_size = \${POST_MAX_SIZE}/g" \
+      -e "s/memory_limit = .*/memory_limit = \${MEMORY_LIMIT}/g" \
+      -e "s/error_reporting = .*/error_reporting = E_ALL/g" \
+      -e "s/display_errors = .*/display_errors = On/g" \
+      -e "s/;date.timezone =/date.timezone = \${DATE_TIMEZONE}/g" \
       $PHP_INI_PATH && \
     sed -i \
+      -e "s/;listen\.mode = .*/listen.mode = 0666/g" \
+      -e "s/;request_terminate_timeout = .*/request_terminate_timeout = 60/g" \
+      -e "s/pm\.max_children = .*/pm.max_children = 70/g" \
+      -e "s/pm\.start_servers = .*/pm.start_servers = 20/g" \
+      -e "s/pm\.min_spare_servers = .*/pm.min_spare_servers = 20/g" \
+      -e "s/pm\.max_spare_servers = .*/pm.max_spare_servers = 35/g" \
+      -e "s/pm\.max_requests = .*/pm.max_requests = 500/g" \
+      # supress warnings
       -e "s/^user =/;user =/g" \
       -e "s/^group =/;group =/g" \
-      -e "s/^listen = 127.0.0.1:/listen = /g" \
-      -e "s/^;clear_env = no$/clear_env = no/" \
-      $PHP_FPM_INI_PATH && \
+      $PHP_FPM_POOL_PATH && \
     wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet && \
     mv composer.phar /usr/local/bin/composer
 
