@@ -1,10 +1,18 @@
 FROM php:7.2-fpm-alpine
 
-RUN apk --update add \
+RUN apk --update add --no-cache --virtual .phpize-deps \
        libxml2-dev \
        zlib-dev \
-  && docker-php-ext-install mbstring pdo pdo_mysql tokenizer xml \
-  && apk del libxml2-dev zlib-dev
+       $PHPIZE_DEPS \
+       libpng-dev \
+       imagemagick-dev \
+       libtool \
+  && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+  && pecl install imagick-3.4.4 \
+  && docker-php-ext-install mbstring pdo pdo_mysql tokenizer xml zip gd exif sockets \
+  && docker-php-ext-enable imagick \
+  && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
+  && apk del .phpize-deps
 
 ARG PHP_INI_PATH=/usr/local/etc/php/php.ini
 ARG PHP_FPM_POOL_PATH=/usr/local/etc/php-fpm.d/www.conf
