@@ -41,12 +41,14 @@ RUN \
       # supress warnings
       -e "s/^user =/;user =/g" \
       -e "s/^group =/;group =/g" \
-      $PHP_FPM_POOL_PATH && \
-    wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet && \
-    mv composer.phar /usr/local/bin/composer
+      $PHP_FPM_POOL_PATH
+
+RUN apk add --no-cache git
+RUN apk add --no-cache npm
 
 RUN mkdir /app && \
   chown php:php /app
+
 USER php
 EXPOSE 9000
 WORKDIR /app

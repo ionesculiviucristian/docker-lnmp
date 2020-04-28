@@ -26,6 +26,19 @@ services:
       - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
+  # phpMyAdmin
+  srv_phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: local_srv_phpmyadmin
+    links:
+      - srv_mysql
+    environment:
+      PMA_HOST: srv_mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8183:80
   # PHP-FPM
   srv_php:
     container_name: local_srv_php
@@ -40,6 +53,7 @@ services:
     volumes:
       - /tmp:/tmp
       - ${PROJECT_PATH}:/app
+      - /profile:/etc/profile.d
   # PHPCS
   srv_phpcs:
     container_name: local_srv_phpcs
